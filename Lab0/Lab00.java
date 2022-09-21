@@ -2,10 +2,10 @@ public class Lab00{
 
     public static int char_count(String s, char c){
         int count = 0;
-        char s_array[] = s.toCharArray();
+        char string_to_char[] = s.toCharArray();
 
         for(int j = 0; j < s.length(); j++){
-            if (s_array[j] == c){
+            if (string_to_char[j] == c){
                 count++;
             }
         }
