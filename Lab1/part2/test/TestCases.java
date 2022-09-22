@@ -3,7 +3,8 @@ import java.lang.reflect.Modifier;
 import java.util.stream.Collectors;
 import java.util.Arrays;
 import java.util.List;
-
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class TestCases
 {
