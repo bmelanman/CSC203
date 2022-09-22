@@ -9,6 +9,12 @@ public class SimpleLoop {
    * @return An integer that is the sum of numbers between low and high
    */
   public static int sum(int low, int high) {
-    return 0; // Clearly not correct
+    int sum = 0;
+
+    for (int i = low; i < high + 1; i++){
+        sum += i;
+    }
+
+    return sum; // Clearly not correct
   }
 }

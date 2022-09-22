@@ -14,6 +14,22 @@ public class ExampleMap {
    * @return The list of high-scoring applicant names
    */
   public static List<String> highScoringStudents(Map<String, List<CourseGrade>> scoresByApplicantName, int scoreThreshold) {
-    return new LinkedList<>();
+    List<String> acceptableApplicants = new LinkedList<>();
+
+    for (Map.Entry<String, List<CourseGrade>> name : scoresByApplicantName.entrySet()){
+        boolean fail = false;
+        
+        for (CourseGrade grade : name.getValue()){
+            if (grade.getScore() <= scoreThreshold){
+                fail = true;
+            }
+        }
+
+        if (fail == false){
+            acceptableApplicants.add(name.getKey());
+        }
+    }
+
+    return acceptableApplicants;
   }
 }
