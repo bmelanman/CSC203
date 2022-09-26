@@ -13,8 +13,8 @@ public class Util {
         Point top_left = rectangle.getTopLeft();
         Point bottom_right = rectangle.getBottomRight();
 
-        double width = top_left.getX() - bottom_right.getX();
-        double length = bottom_right.getY() - top_left.getY();
+        double width = Math.abs(top_left.getX() - bottom_right.getX());
+        double length = Math.abs(bottom_right.getY() - top_left.getY());
 
         return (2 * width) + (2 * length);
     }

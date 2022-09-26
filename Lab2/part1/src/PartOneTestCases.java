@@ -95,7 +95,7 @@ public class PartOneTestCases {
 
         Rectangle rectangle = new Rectangle(top_left, bottom_right);
 
-        assertEquals(-11.2, Util.perimeter(rectangle), DELTA);
+        assertEquals(11.2, Util.perimeter(rectangle), DELTA);
     }
 
     @Test
