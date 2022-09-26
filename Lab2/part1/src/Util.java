@@ -24,15 +24,13 @@ public class Util {
         List<Point> points = polygon.getPoints();
         double perimeter = 0.0;
 
-        for (int i = 0; i < (points.size() - 1); i++){
-            Point point0 = points.get(i);
-            Point point1 = points.get(i + 1);
+        for (int i = 0; i < (points.size() - 2); i++){
 
-            perimeter += point_length(point0, point1);
+            perimeter += point_length(points.get(i), points.get(i + 1));
         }
 
         // Close the perimeter with the first and last points
-        perimeter += point_length(points.get(0), points.get(points.size()));
+        perimeter += point_length(points.get(0), points.get(points.size() - 1));
 
         return perimeter;
     }
