@@ -1,8 +1,5 @@
 import static org.junit.Assert.*;
 
-// import java.lang.reflect.Method;
-// import java.lang.reflect.Modifier;
-// import java.util.stream.Collectors;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
