@@ -22,26 +22,24 @@ public class Util {
     public static double perimeter(Polygon polygon){
 
         List<Point> points = polygon.getPoints();
+
         double perimeter = 0.0;
 
-        for (int i = 0; i < (points.size() - 2); i++){
-
+        for (int i = 0; i < (points.size() - 1); i++){
             perimeter += point_length(points.get(i), points.get(i + 1));
         }
 
         // Close the perimeter with the first and last points
-        perimeter += point_length(points.get(0), points.get(points.size() - 1));
-
-        return perimeter;
+        return perimeter += point_length(points.get(0), points.get(points.size() - 1));
     }
 
     private static double point_length(Point point_a, Point point_b){
 
-        double x1 = point_a.getX();
-        double y1 = point_a.getY();
-        double x2 = point_b.getX();
-        double y2 = point_b.getY();
+        double x = point_a.getX() - point_b.getX();
+        double y = point_a.getY() - point_b.getY();
 
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        double length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+        return length;
     }
 }

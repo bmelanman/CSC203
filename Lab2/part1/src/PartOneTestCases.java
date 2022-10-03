@@ -108,7 +108,7 @@ public class PartOneTestCases {
 
         Polygon polygon = new Polygon(points);
 
-        assertEquals(10.89093456125003, Util.perimeter(polygon), DELTA);
+        assertEquals(12.89093456125003, Util.perimeter(polygon), DELTA);
     }
 
     @Test
