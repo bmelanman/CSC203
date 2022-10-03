@@ -20,7 +20,7 @@ public class Circle {
     public double perimeter(){
 
         // Perimiter = 2 * pi * r
-        return 2 * Math.PI * this.radius;
+        return 2 * Math.PI * Math.abs(this.radius);
     }
     // additional functions must be private
 }

@@ -90,7 +90,7 @@ public class PartTwoTestCases {
 
         Polygon polygon = new Polygon(points);
 
-        assertEquals(10.89093456125003, polygon.perimeter(), DELTA);
+        assertEquals(12.89093456125003, polygon.perimeter(), DELTA);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class PartTwoTestCases {
         Circle circle = new Circle(circle_point, radius);
         Polygon polygon = new Polygon(points);
 
-        assertEquals(4 * Math.PI, Bigger.whichIsBigger(circle, rectangle, polygon));
+        assertEquals(12.890934561250031, Bigger.whichIsBigger(circle, rectangle, polygon));
     }
 
     private static void verifyImplSpecifics(
