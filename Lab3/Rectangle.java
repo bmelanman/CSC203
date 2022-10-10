@@ -35,7 +35,13 @@ public class Rectangle implements Shape {
         return this.topLeft;
     }
 
-    public boolean equals(Rectangle r) {
+    public boolean equals(Object o) {
+
+        if (!(o instanceof Rectangle) || (o == null)){
+            return false;
+        }
+
+        Rectangle r = (Rectangle) o;
 
         if (this.width == r.width && this.height == r.height && this.topLeft == r.topLeft && this.color == r.color) {
             return true;
@@ -63,7 +69,8 @@ public class Rectangle implements Shape {
     }
 
     public void translate(Point p) {
-
+        this.topLeft = new Point((int) this.topLeft.getX() + (int) p.getX(),
+                (int) this.topLeft.getY() + (int) p.getY());
     }
 
 }

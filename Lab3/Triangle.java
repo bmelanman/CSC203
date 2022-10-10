@@ -7,28 +7,34 @@ public class Triangle implements Shape {
     private Point c;
     private Color color;
 
-    Triangle(Point a, Point b, Point c, Color color) {
+    public Triangle(Point a, Point b, Point c, Color color) {
         this.a = a;
         this.b = b;
         this.c = c;
         this.color = color;
     }
 
-    Point getVertexA() {
+    public Point getVertexA() {
         return this.a;
     }
 
-    Point getVertexB() {
+    public Point getVertexB() {
         return this.b;
     }
 
-    Point getVertexC() {
+    public Point getVertexC() {
         return this.c;
     }
 
-    boolean equals(Triangle t) {
+    public boolean equals(Object o) {
 
-        if (this.a == t.a && this.b == t.b &&this.c == t.c){
+        if (!(o instanceof Triangle) || (o == null)){
+            return false;
+        }
+
+        Triangle t = (Triangle) o;
+
+        if (this.a == t.a && this.b == t.b && this.c == t.c) {
             return true;
         }
 
@@ -57,7 +63,9 @@ public class Triangle implements Shape {
     }
 
     public void translate(Point p) {
-
+        this.a = new Point((int) this.a.getX() + (int) p.getX(), (int) this.a.getY() + (int) p.getY());
+        this.b = new Point((int) this.b.getX() + (int) p.getX(), (int) this.b.getY() + (int) p.getY());
+        this.c = new Point((int) this.c.getX() + (int) p.getX(), (int) this.c.getY() + (int) p.getY());
     }
 
     // additional functions must be private
