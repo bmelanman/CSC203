@@ -158,4 +158,133 @@ public class TestCases {
             assertEquals(expectedMethodReturns.get(i), method.getReturnType());
         }
     }
+
+    @Test
+    public void testTriangle(){
+        Point a = new Point(-4, -1);
+        Point b = new Point(-1, 4);
+        Point c = new Point(3, -4);
+        Color color = new Color(255);
+        
+        Triangle triangle = new Triangle(a, b, c, color);
+        Triangle triangle2 = new Triangle(a, b, c, color);
+
+        // Test .equals()
+        assertEquals(triangle.equals(triangle2), true);
+        assertEquals(triangle.equals(triangle), true);
+        assertEquals(triangle.equals(null), false);
+        assertEquals(triangle.equals(a), false);
+
+        // Test Area and Perimeter methods
+        assertEquals(triangle.getArea(), 22);
+        assertEquals(triangle.getPerimeter(), 22.390996910708367);
+
+        //Test translate
+        triangle.translate(c);
+
+        // Values shouldn't change because of translate
+        assertEquals(triangle.getArea(), 22);
+        assertEquals(triangle.getPerimeter(), 22.390996910708367);
+
+        // Test color
+        assertEquals(triangle.getColor().getRGB(), -16776961);
+
+        Color new_color = new Color(1);
+        triangle.setColor(new_color);
+
+        assertEquals(triangle.getColor().getRGB(), -16777215);
+    }
+
+    @Test
+    public void testCircle(){
+        Point center = new Point(-2, 1);
+        double radius = 1.323;
+        Color color = new Color(255);
+        
+        Circle circle = new Circle(radius, center, color);
+        Circle circle2 = new Circle(radius, center, color);
+
+        // Test .equals()
+        assertEquals(circle.equals(circle2), true);
+        assertEquals(circle.equals(circle), true);
+        assertEquals(circle.equals(null), false);
+        assertEquals(circle.equals(center), false);
+
+        // Test Area and Perimeter methods
+        assertEquals(circle.getArea(), 5.498820727765168);
+        assertEquals(circle.getPerimeter(), 8.312654161398592);
+
+        //Test translate
+        circle.translate(center);
+
+        // Values shouldn't change because of translate
+        assertEquals(circle.getArea(), 5.498820727765168);
+        assertEquals(circle.getPerimeter(), 8.312654161398592);
+
+        // Test color
+        assertEquals(circle.getColor().getRGB(), -16776961);
+
+        Color new_color = new Color(1);
+        circle.setColor(new_color);
+
+        assertEquals(circle.getColor().getRGB(), -16777215);
+    }
+
+    @Test
+    public void testRectangle(){
+        double width = 3.76;
+        double height = 1.44;
+        Point topLeft = new Point(2, -5);
+        Color color = new Color(255);
+        
+        Rectangle rectangle = new Rectangle(width, height, topLeft, color);
+        Rectangle rectangle2 = new Rectangle(width, height, topLeft, color);
+
+        // Test .equals()
+        assertEquals(rectangle.equals(rectangle2), true);
+        assertEquals(rectangle.equals(rectangle), true);
+        assertEquals(rectangle.equals(null), false);
+        assertEquals(rectangle.equals(topLeft), false);
+
+        // Test Area and Perimeter methods
+        assertEquals(rectangle.getArea(), 5.4144);
+        assertEquals(rectangle.getPerimeter(), 10.4, DELTA);
+
+        //Test translate
+        rectangle.translate(topLeft);
+
+        // Values shouldn't change because of translate
+        assertEquals(rectangle.getArea(), 5.4144);
+        assertEquals(rectangle.getPerimeter(), 10.4, DELTA);
+
+        // Test color
+        assertEquals(rectangle.getColor().getRGB(), -16776961);
+
+        Color new_color = new Color(1);
+        rectangle.setColor(new_color);
+
+        assertEquals(rectangle.getColor().getRGB(), -16777215);
+    }
+
+    @Test
+    public void testWorkSpace(){
+        WorkSpace workspace = new WorkSpace();
+
+        Rectangle rect_black = new Rectangle(1.4, 9.8, new Point(5, -2), new Color(0));
+        Circle circ_white = new Circle(2.222, new Point(1, 1), new Color(255));
+        Triangle tri_gray = new Triangle(new Point(4, 9), new Point(11, -9), new Point(0, 0), new Color((int) 255/2));
+        Circle circ_black = new Circle(9.1, new Point(0, -3), new Color(0));
+
+        workspace.add(rect_black);
+        workspace.add(circ_white);
+        workspace.add(tri_gray);
+        workspace.add(circ_black);
+
+        assertEquals(workspace.size(), 4);
+        assertEquals(workspace.get(2).equals(tri_gray), true);
+        assertEquals(workspace.getCircles().size(), 2);
+
+        assertEquals(workspace.getAreaOfAllShapes(), 356.88622278685716);
+        assertEquals(workspace.getPerimeterOfAllShapes(), 136.91296016906324);
+    }
 }
