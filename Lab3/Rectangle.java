@@ -43,7 +43,7 @@ public class Rectangle implements Shape {
 
         Rectangle r = (Rectangle) o;
 
-        if (this.width == r.width && this.height == r.height && this.topLeft == r.topLeft && this.color.equals(r.color)) {
+        if (this.width == r.width && this.height == r.height && this.topLeft.equals(r.topLeft) && this.color.equals(r.color)) {
             return true;
         }
 
