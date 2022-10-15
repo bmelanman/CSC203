@@ -34,7 +34,7 @@ public class Circle implements Shape {
 
         Circle c = (Circle) o;
 
-        if (this.center == c.center && this.color == c.color && this.radius == c.radius) {
+        if (this.center.equals(c.center) && this.color.equals(c.color) && this.radius == c.radius) {
             return true;
         }
 

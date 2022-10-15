@@ -34,11 +34,7 @@ public class Triangle implements Shape {
 
         Triangle t = (Triangle) o;
 
-        if (this.a == t.a && this.b == t.b && this.c == t.c) {
-            return true;
-        }
-
-        return false;
+        return (this.a.equals(t.a) && this.b.equals(t.b) && this.c.equals(t.c));
     }
 
     // Implemented Methods

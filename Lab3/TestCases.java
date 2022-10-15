@@ -169,9 +169,12 @@ public class TestCases {
         Triangle triangle = new Triangle(a, b, c, color);
         Triangle triangle2 = new Triangle(a, b, c, color);
 
+        Circle circle = new Circle( 1.323, new Point(-2, 1),color);
+
         // Test .equals()
-        assertEquals(triangle.equals(triangle2), true);
         assertEquals(triangle.equals(triangle), true);
+        assertEquals(triangle.equals(triangle2), true);
+        assertEquals(triangle.equals(circle), false);
         assertEquals(triangle.equals(null), false);
         assertEquals(triangle.equals(a), false);
 
