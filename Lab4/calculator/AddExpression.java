@@ -7,5 +7,4 @@ class AddExpression extends BinaryExpression {
     protected double _applyOperator(double lft, double rht) {
         return lft + rht;
     }
-
 }

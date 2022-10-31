@@ -33,11 +33,7 @@ public class Calculator
                System.out.println(op + " => " + op.evaluate(this.bindings));
             }
          }
-         catch (InvalidOperationException exp)
-         {
-            System.err.println(exp.getMessage());
-         }
-         catch (UnboundIdentifierException exp)
+         catch (InvalidOperationException | UnboundIdentifierException exp)
          {
             System.err.println(exp.getMessage());
          }
