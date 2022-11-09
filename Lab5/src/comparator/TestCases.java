@@ -63,15 +63,15 @@ public class TestCases {
     public void testYearExtractorComparator() {
 
         List<Song> expectedList = Arrays.asList(
-                new Song("Queen", "Bohemian Rhapsody", 1975),
-                new Song("Foo Fighters", "Baker Street", 1997),
+                new Song("City and Colour", "Sleeping Sickness", 2007),
+                new Song("Avett Brothers", "Talk on Indolence", 2006),
                 new Song("Decemberists", "The Mariner's Revenge Song", 2005),
                 new Song("Rogue Wave", "Love's Lost Guarantee", 2005),
-                new Song("Avett Brothers", "Talk on Indolence", 2006),
-                new Song("City and Colour", "Sleeping Sickness", 2007)
+                new Song("Foo Fighters", "Baker Street", 1997),
+                new Song("Queen", "Bohemian Rhapsody", 1975)
         );
 
-        Comparator<Song> TitleComparator = Comparator.comparing(Song::year);
+        Comparator<Song> TitleComparator = Comparator.comparing(Song::year).reversed();
 
         songList.sort(TitleComparator);
         assertEquals(expectedList, songList);
