@@ -18,11 +18,8 @@ public class PathingMain extends PApplet {
     private PImage obstacle;
     private PImage goal;
     private List<Point> path;
-
     private static final int TILE_SIZE = 32;
-
     private static final int ANIMATION_TIME = 100;
-
     private GridValues[][] grid;
     private static final int ROWS = 15;
     private static final int COLS = 20;
@@ -31,7 +28,6 @@ public class PathingMain extends PApplet {
 
     private Point wPos;
     private static Point goalPos;
-
     private boolean drawPath = false;
 
     Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
@@ -75,7 +71,7 @@ public class PathingMain extends PApplet {
         }
 
         //set up some obstacles
-        for (int row = 2; row < 8; row++) {
+        for (int row = 3; row < 8; row++) {
             grid[row][row + 5] = GridValues.OBSTACLE;
         }
 
@@ -115,8 +111,6 @@ public class PathingMain extends PApplet {
                 draw_tile(row, col);
             }
         }
-
-        image(obstacle, 14 * TILE_SIZE, 12 * TILE_SIZE);
     }
 
     private void draw_path() {
@@ -148,8 +142,23 @@ public class PathingMain extends PApplet {
             }
             case GOAL -> image(goal, col * TILE_SIZE, row * TILE_SIZE);
         }
+    }
 
+    public void mousePressed() {
+        Point pressed = mouseToPoint();
+        List<GridValues> spaces = List.of(new GridValues[]{GridValues.BACKGROUND, GridValues.SEARCHED, GridValues.DEAD_END});
 
+        if (grid[pressed.y][pressed.x] == GridValues.OBSTACLE)
+            grid[pressed.y][pressed.x] = GridValues.BACKGROUND;
+        else if (spaces.contains(grid[pressed.y][pressed.x])) {
+            grid[pressed.y][pressed.x] = GridValues.OBSTACLE;
+        }
+
+        redraw();
+    }
+
+    private Point mouseToPoint() {
+        return new Point(mouseX / TILE_SIZE, mouseY / TILE_SIZE);
     }
 
     public static void main(String[] args) {
@@ -162,7 +171,7 @@ public class PathingMain extends PApplet {
             path.clear();
             initialize_grid(grid);
 
-            path = depthFirstSearch(wPos, goalPos);
+            depthFirstSearch(wPos, goalPos);
 
         } else if (key == 'p') {
             drawPath ^= true;
@@ -174,7 +183,7 @@ public class PathingMain extends PApplet {
         }
     }
 
-    private List<Point> depthFirstSearch(Point start, Point end) {
+    private void depthFirstSearch(Point start, Point end) {
 
         Predicate<Point> canTraverse =
                 (p) -> (withinBounds(p)
@@ -184,13 +193,19 @@ public class PathingMain extends PApplet {
         Predicate<Point> checkSearched =
                 (p) -> (getOccupancy(p) != GridValues.SEARCHED);
 
-        List<Point> path = new ArrayList<>();
         List<Point> successors;
         List<Point> nextPoints;
         Point currentPoint = start;
 
         while (!currentPoint.neighbors(end)) {
 
+            fill(128, 0, 0);
+            rect(
+                    (currentPoint.x * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
+                    (currentPoint.y * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
+                    (float) (TILE_SIZE / 4),
+                    (float) (TILE_SIZE / 4)
+            );
             // Set the current point as searched
             setOccupancy(currentPoint, GridValues.SEARCHED);
 
@@ -202,7 +217,8 @@ public class PathingMain extends PApplet {
             // If there are no traversable points, return an empty list (isn't that clever?)
             if (successors.isEmpty()) {
                 System.out.println("No path!");
-                return successors;
+                path.clear();
+                return;
             }
 
             // Filter out points that have been traversed
@@ -224,22 +240,15 @@ public class PathingMain extends PApplet {
             path.add(currentPoint);
         }
 
-        // If we've reached the end, add the
-        // last point and return the path
-        path.add(currentPoint);
-        System.out.println(currentPoint);
-        System.out.println(goalPos);
-
-
-
-        return path;
+        // Make sure we mark the last point as visited
+        setOccupancy(currentPoint, GridValues.SEARCHED);
     }
 
-    public PathingMain.GridValues getOccupancy(Point p) {
+    private PathingMain.GridValues getOccupancy(Point p) {
         return grid[p.y][p.x];
     }
 
-    public void setOccupancy(Point p, PathingMain.GridValues value) {
+    private void setOccupancy(Point p, PathingMain.GridValues value) {
         grid[p.y][p.x] = value;
     }
 

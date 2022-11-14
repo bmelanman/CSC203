@@ -124,7 +124,7 @@ public class AStarPathingStrategyTests {
                         new Point(0, 2),
                         p -> withinBounds(p, grid) && grid[getY(p)][getX(p)] != GridValues.OBSTACLE,
                         AStarPathingStrategyTests::neighbors,
-                        PathingStrategy.CARDINAL_NEIGHBORS
+                        PathingStrategy.CARDINAL_NEIGHBORS_RDLU
                 );
 
         Point[] expected = new Point[]{new Point(0, 1)};

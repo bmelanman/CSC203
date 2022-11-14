@@ -4,6 +4,7 @@ import processing.core.PImage;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class PathingMain extends PApplet {
     private PImage wyvern;
@@ -11,16 +12,11 @@ public class PathingMain extends PApplet {
     private PImage obstacle;
     private PImage goal;
     private List<Point> path;
-    private final PathingStrategy strategy = new SingleStepPathingStrategy();
-    //private PathingStrategy strategy = new AStarPathingStrategy();
-
     private static final int TILE_SIZE = 32;
-    private GridValues[][] grid;
+    private static GridValues[][] grid;
     private static final int ROWS = 15;
     private static final int COLS = 20;
-
-    private enum GridValues {BACKGROUND, OBSTACLE, GOAL}
-
+    enum GridValues {BACKGROUND, OBSTACLE, GOAL, SEARCHED, DEAD_END}
     private Point wPos;
     private Point goalPos;
     private boolean foundPath = false;
@@ -67,7 +63,7 @@ public class PathingMain extends PApplet {
 
     public void draw() {
         draw_grid();
-        draw_path(foundPath);
+        draw_path();
 
         image(wyvern, wPos.x * TILE_SIZE, wPos.y * TILE_SIZE);
     }
@@ -80,7 +76,7 @@ public class PathingMain extends PApplet {
         }
     }
 
-    private void draw_path(boolean foundPath) {
+    private void draw_path() {
         for (Point p : path) {
             if (foundPath)
                 fill(128, 0, 0);
@@ -94,13 +90,40 @@ public class PathingMain extends PApplet {
                     ((float) TILE_SIZE) / 4
             );
         }
+        draw_visited();
     }
 
     private void draw_tile(int row, int col) {
         switch (grid[row][col]) {
-            case BACKGROUND -> image(background, col * TILE_SIZE, row * TILE_SIZE);
+            case BACKGROUND, SEARCHED, DEAD_END -> image(background, col * TILE_SIZE, row * TILE_SIZE);
             case OBSTACLE -> image(obstacle, col * TILE_SIZE, row * TILE_SIZE);
             case GOAL -> image(goal, col * TILE_SIZE, row * TILE_SIZE);
+        }
+    }
+
+    private void draw_visited(){
+        for(int i = 0; i < ROWS; i++){
+            for(int j = 0; j < COLS; j++){
+                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END){
+                    fill(0, 128);
+                    rect(
+                            j * TILE_SIZE + (float) (TILE_SIZE / 4),
+                            i * TILE_SIZE + (float) (TILE_SIZE / 4),
+                            (float) (TILE_SIZE / 2),
+                            (float) (TILE_SIZE / 2)
+                    );
+                }
+            }
+        }
+    }
+
+    private void clear_searched(GridValues[][] grid){
+        for(int i = 0; i < ROWS; i++){
+            for(int j = 0; j < COLS; j++){
+                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END){
+                    grid[i][j] = GridValues.BACKGROUND;
+                }
+            }
         }
     }
 
@@ -111,21 +134,27 @@ public class PathingMain extends PApplet {
     public void keyPressed() {
         if (key == ' ') {
             path.clear();
+            clear_searched(grid);
             foundPath = findGoal(wPos, goalPos, grid, path);
+            redraw();
+        }
+        else if (key == 'p'){
+            draw_visited();
             redraw();
         }
     }
 
     public void mousePressed() {
         Point pressed = mouseToPoint();
+        List<GridValues> spaces = List.of(new GridValues[]{GridValues.BACKGROUND, GridValues.SEARCHED, GridValues.DEAD_END});
 
         if (grid[pressed.y][pressed.x] == GridValues.OBSTACLE)
             grid[pressed.y][pressed.x] = GridValues.BACKGROUND;
-        else if (grid[pressed.y][pressed.x] == GridValues.BACKGROUND)
+        else if (spaces.contains(grid[pressed.y][pressed.x])) {
             grid[pressed.y][pressed.x] = GridValues.OBSTACLE;
+        }
 
         redraw();
-
     }
 
     private Point mouseToPoint() {
@@ -134,22 +163,25 @@ public class PathingMain extends PApplet {
 
     private boolean findGoal(Point pos, Point goal, GridValues[][] grid, List<Point> path) {
 
-        AStarPathingStrategy aStarStrat = new AStarPathingStrategy();
+        PathingStrategy strategy = new DepthFirstSearch();
 
-        List<Point> aStarPath = aStarStrat.computePath(
+        Predicate<Point> canTraverse =
+                (p) -> (withinBounds(p, grid)
+                        && getOccupancy(p) != PathingMain.GridValues.OBSTACLE
+                        && getOccupancy(p) != PathingMain.GridValues.DEAD_END);
+
+        List<Point> aStarPath = strategy.computePath(
                 pos,
                 goal,
-                p -> withinBounds(p, grid) && grid[p.y][p.x] != GridValues.OBSTACLE,
+                canTraverse,
                 Point::neighbors,
-                PathingStrategy.CARDINAL_NEIGHBORS
+                PathingStrategy.CARDINAL_NEIGHBORS_RDLU
         );
 
         if (aStarPath.size() == 0) {
             System.out.println("No path found");
             return false;
         }
-
-        System.out.println(aStarPath);
 
         path.addAll(aStarPath);
 
@@ -159,6 +191,15 @@ public class PathingMain extends PApplet {
     private static boolean withinBounds(Point p, GridValues[][] grid) {
         return p.y >= 0 && p.y < grid.length && p.x >= 0 && p.x < grid[0].length;
     }
+
+    public static void setOccupancy(Point p, GridValues value) {
+        grid[p.y][p.x] = value;
+    }
+
+    public static GridValues getOccupancy(Point p){
+        return grid[p.y][p.x];
+    }
+
 }
 
     /*

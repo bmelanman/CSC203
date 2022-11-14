@@ -18,13 +18,13 @@ interface PathingStrategy {
                             BiPredicate<Point, Point> withinReach,
                             Function<Point, Stream<Point>> potentialNeighbors);
 
-    Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
+    Function<Point, Stream<Point>> CARDINAL_NEIGHBORS_RDLU =
             point ->
                     Stream.<Point>builder()
-                            .add(new Point(point.x, point.y - 1))
+                            .add(new Point(point.x + 1, point.y))
                             .add(new Point(point.x, point.y + 1))
                             .add(new Point(point.x - 1, point.y))
-                            .add(new Point(point.x + 1, point.y))
+                            .add(new Point(point.x, point.y - 1))
                             .build();
 
     Function<Point, Stream<Point>> DIAGONAL_NEIGHBORS =
