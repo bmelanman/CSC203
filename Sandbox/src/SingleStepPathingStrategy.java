@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -15,14 +17,36 @@ class SingleStepPathingStrategy implements PathingStrategy {
          * has been reached.
          */
 
-        return potentialNeighbors.apply(start)
-                .filter(canPassThrough)
-                .filter(pt ->
-                        !pt.equals(start)
-                                && !pt.equals(end)
-                                && Math.abs(end.x - pt.x) <= Math.abs(end.x - start.x)
-                                && Math.abs(end.y - pt.y) <= Math.abs(end.y - start.y))
-                .limit(1)
-                .collect(Collectors.toList());
+        List<Point> path = new ArrayList<>();
+
+        Point currentPos = start;
+
+        while (!currentPos.equals(end)) {
+
+            // Filter out invalid spots
+            List<Point> ValidPositions =
+                    potentialNeighbors.apply(currentPos)
+                            .filter(canPassThrough)
+                            .filter(p -> !path.contains(p))
+                            .filter((pt) -> (!pt.equals(start) && !pt.equals(end)))
+                            .collect(Collectors.toList());
+
+            // Find the cost of each new position
+            List<Integer> posCosts = ValidPositions.stream().map((p) -> p.computeCost(end)).collect(Collectors.toList());
+
+            if (posCosts.isEmpty()){
+                return path;
+            }
+
+            // Get the location of the position that gets up closest to the end
+            int cheapestPosIndex = posCosts.indexOf(Collections.min(posCosts));
+
+            currentPos = ValidPositions.get(cheapestPosIndex);
+
+            path.add(currentPos);
+        }
+
+        return path;
+
     }
 }

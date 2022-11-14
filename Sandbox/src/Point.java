@@ -1,10 +1,18 @@
+import java.awt.geom.Point2D;
+
 final class Point {
     public final int x;
     public final int y;
+    public String id;
 
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
+        this.id = "";
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String toString() {
@@ -24,8 +32,12 @@ final class Point {
         return result;
     }
 
-    public boolean adjacent(Point p) {
-        return (x == p.x && Math.abs(y - p.y) == 1) ||
-                (y == p.y && Math.abs(x - p.x) == 1);
+    public int computeCost(Point p) {
+        return (int) Point2D.distance(x, y, p.x, p.y);
+    }
+
+    public boolean neighbors(Point p) {
+        return x + 1 == p.x && y == p.y || x - 1 == p.x && y == p.y ||
+                x == p.x && y + 1 == p.y || x == p.x && y - 1 == p.y;
     }
 }
