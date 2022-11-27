@@ -6,29 +6,25 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DepthFirstSearch implements PathingStrategy{
+public class DFSPathingStrategy_copy implements PathingStrategy {
     @Override
-    public List<Point> computePath(Point start, Point end, Predicate<Point> canPassThrough, BiPredicate<Point, Point> withinReach, Function<Point, Stream<Point>> potentialNeighbors) {
-        return depthFirstSearch(start, end, canPassThrough, withinReach, potentialNeighbors);
-    }
+    public List<Point> computePath(Point start, Point end,
+                                   Predicate<Point> canPassThrough,
+                                   BiPredicate<Point, Point> withinReach,
+                                   Function<Point, Stream<Point>> potentialNeighbors) {
 
-    private List<Point> depthFirstSearch(Point start, Point end,
-                                  Predicate<Point> canPassThrough,
-                                  BiPredicate<Point, Point> withinReach,
-                                  Function<Point, Stream<Point>> potentialNeighbors) {
-
-        Predicate<Point> checkSearched =
-                (p) -> (PathingMain.getOccupancy(p) != PathingMain.GridValues.SEARCHED);
+        Predicate<Point> checkSearched = p -> getOccupancy(p, PathingMain.grid) != PathingMain.GridValues.SEARCHED;
 
         List<Point> path = new ArrayList<>();
         List<Point> successors;
         List<Point> nextPoints;
+
         Point currentPoint = start;
 
         while (!withinReach.test(currentPoint, end)) {
 
             // Set the current point as searched
-            PathingMain.setOccupancy(currentPoint, PathingMain.GridValues.SEARCHED);
+            setOccupancy(currentPoint, PathingMain.grid, PathingMain.GridValues.SEARCHED);
 
             // Generate a set of valid next points
             successors = potentialNeighbors.apply(currentPoint)
@@ -39,6 +35,7 @@ public class DepthFirstSearch implements PathingStrategy{
             if (successors.isEmpty()) {
                 System.out.println("No path!");
                 path.clear();
+                path.add(currentPoint);
                 return path;
             }
 
@@ -49,7 +46,7 @@ public class DepthFirstSearch implements PathingStrategy{
             // a traversed point and remove the current point mark it
             // as a dead end which will never be visited again
             if (nextPoints.isEmpty()) {
-                PathingMain.setOccupancy(currentPoint, PathingMain.GridValues.DEAD_END);
+                setOccupancy(currentPoint, PathingMain.grid, PathingMain.GridValues.DEAD_END);
                 removeLast(path);
                 nextPoints = successors;
             }
@@ -58,18 +55,26 @@ public class DepthFirstSearch implements PathingStrategy{
             currentPoint = nextPoints.get(0);
 
             // Add the point only if it is not currently in the list of points
-            if (!path.contains(currentPoint)){
-            path.add(currentPoint);
+            if (!path.contains(currentPoint)) {
+                path.add(currentPoint);
             }
 
         }
 
         // Make sure we mark the last point as visited
-        PathingMain.setOccupancy(currentPoint, PathingMain.GridValues.SEARCHED);
+        setOccupancy(currentPoint, PathingMain.grid, PathingMain.GridValues.SEARCHED);
         return path;
     }
 
-    private void removeLast(List<Point> path){
+    static PathingMain.GridValues getOccupancy(Point p, PathingMain.GridValues[][] grid) {
+        return grid[p.y()][p.x()];
+    }
+
+    private static void setOccupancy(Point p, PathingMain.GridValues[][] grid, PathingMain.GridValues value) {
+        grid[p.y()][p.x()] = value;
+    }
+
+    private void removeLast(List<Point> path) {
 
         if (!path.isEmpty()) {
             path.remove(path.size() - 1);

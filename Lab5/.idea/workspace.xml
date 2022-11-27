@@ -2,33 +2,51 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9c6ac294-9057-4340-b888-21cbe51e96b9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Lab5.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/comparator/Song.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/comparator/TestCases.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/exercises/TestCases.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/exercises/TestCases.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 1/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 1/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 1/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 1/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 1/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 1/Quiz 1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 2/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 2/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 2/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 2/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 2/Quiz 2.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 3/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 3/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 3/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 3/Quiz 3.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz 4/quiz3.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab4/calculator/out/production/calculator/Calculator.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab4/calculator/out/production/calculator/Calculator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab4/equality/out/production/equality/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab4/equality/out/production/equality/Student.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab4/equality/out/production/equality/TestCases.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab4/equality/out/production/equality/TestCases.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/DFS_Tests.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/out/production/DFS_Tests/TestCases.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/src/BinaryTree.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../DFS_Tests/src/TestCases.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab6/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab6/src/DFSPathingStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab6/src/DFSPathingStrategy_copy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab6/src/PathingStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/Quiz5.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/src/Car.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/src/Fight.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/src/IRON_HEART.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/src/SPIDER_GWEN.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/src/SQUIRREL_GIRL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Quizes/Quiz5/src/SuperHero.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/DFSPathingStrategy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/out/production/Lab6/PathingMain$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/out/production/Lab6/PathingMain$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/out/production/Lab6/PathingMain$GridValues.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/out/production/Lab6/PathingMain$GridValues.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/out/production/Lab6/PathingMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/out/production/Lab6/PathingMain.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/out/production/Lab6/Point.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/out/production/Lab6/Point.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/src/PathingMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/src/PathingMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab6/src/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab6/src/Point.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/AStarPathingStrategy.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/AStarPathingStrategy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/DepthFirstSearch.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/Node.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/PathingMain$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/PathingMain$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/PathingMain$GridValues.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/PathingMain$GridValues.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/PathingMain.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/PathingMain.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/Point.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/out/production/Sandbox/Point.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/src/AStarPathingStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/src/AStarPathingStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/src/DepthFirstSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/src/DFSPathingStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/src/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/src/Node.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/src/PathingMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/src/PathingMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sandbox/src/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Sandbox/src/Point.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +73,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false"
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/brycemelander/Documents/GitHub/CSC203/Lab5"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -67,6 +86,7 @@
       <option name="presentableId" value="Default" />
       <updated>1667757772599</updated>
       <workItem from="1667757773743" duration="200000" />
+      <workItem from="1668640925129" duration="621000" />
     </task>
     <servers />
   </component>

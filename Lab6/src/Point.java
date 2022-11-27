@@ -1,10 +1,11 @@
-public class Point {
-    public final int x;
-    public final int y;
+public record Point(int x, int y) {
 
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public int x(){
+        return x;
+    }
+
+    public int y(){
+        return y;
     }
 
     public String toString() {
@@ -12,7 +13,7 @@ public class Point {
     }
 
     public boolean neighbors(Point p) {
-        return x + 1 == p.x && y == p.y || x - 1 == p.x && y == p.y ||
-                x == p.x && y + 1 == p.y || x == p.x && y - 1 == p.y;
+        return x + 1 == p.x() && y == p.y() || x - 1 == p.x() && y == p.y() ||
+                x == p.x() && y + 1 == p.y() || x == p.x() && y - 1 == p.y();
     }
 }

@@ -3,16 +3,10 @@ import java.awt.geom.Point2D;
 final class Point {
     public final int x;
     public final int y;
-    public String id;
 
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
-        this.id = "";
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String toString() {

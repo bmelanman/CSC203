@@ -12,71 +12,134 @@ class AStarPathingStrategy implements PathingStrategy {
                                    BiPredicate<Point, Point> withinReach,
                                    Function<Point, Stream<Point>> potentialNeighbors) {
 
-        Queue<Node<Point>> openList = new PriorityQueue<>();
-        Map<Point, Node<Point>> closedList = new HashMap<>();
+        if (start == null || end == null){
+            return new ArrayList<>();
+        }
+
         List<Point> path = new ArrayList<>();
+        Node<Point> currentNode;
         List<Point> successors;
         Node<Point> nextNode;
-        int currentNode_totalCost;
-        int currentNode_startCost;
+        Node<Point> nodeCheck;
 
-        Node<Point> currentNode = new Node<>(start, start.computeCost(end));
-        openList.add(currentNode);
+        // openList: A lit of potential next steps in the path
+        Queue<Node<Point>> openList = new PriorityQueue<>();
+        Map<Point, Node<Point>> openListMap = new HashMap<>();
+        // closedList: A map of all points that have been visited
+        Map<Point, Node<Point>> closedList = new HashMap<>();
 
+        // Convert the start point to a Node and add it to the openList
+        openList.add(new Node<>(start, null, 0, start.computeCost(end)));
+        openListMap.put(start, openList.peek());
+
+        // Iterate through different points until we reach
+        // the end or there are no more available points
         while (!openList.isEmpty()) {
 
-            // Pop the next node off of openList
+//            System.out.println(openList.size());
+//            System.out.println(openListMap.size());
+//            System.out.println("-----");
+
+            // Pop the next node off of openList with the lowest f-value
             currentNode = openList.poll();
-
-            // Check to see if it's one step away from the end
-            if (withinReach.test(currentNode.getPoint(), end)) {
-
-                // Load all the nodes in the route into a list
-                while (currentNode.getPoint() != start) {
-                    path.add(0, currentNode.getPoint());
-                    currentNode = closedList.get(currentNode.getPrevious());
-                }
-
-                // Return the path
-                return path;
-            }
+            openListMap.remove(currentNode.getPoint());
 
             // Generate the next set of valid points
             successors = potentialNeighbors.apply(currentNode.getPoint())
                     .filter(canPassThrough)
                     .collect(Collectors.toList());
 
-            // This will be used for cost calculation
-            currentNode_startCost = currentNode.getStartCost();
-
             // Go through each point and calculate their costs
             for (Point nextPoint : successors) {
 
-                // Check if the node has been explored,
-                // or make a new node and add it to the closed List
-                nextNode = closedList.getOrDefault(nextPoint, new Node<>(nextPoint));
-
-                closedList.put(nextPoint, nextNode);
-
-                // Calculate the cost of this point.
-                // Add 1 to the cost because all successors
-                // are 1 step away from the parent node.
-                currentNode_totalCost = currentNode_startCost + 1;
-
-                // If this point is cheaper than our current point,
-                // add it to the list of possible next positions
-                if (currentNode_totalCost < nextNode.getStartCost()) {
-                    nextNode.setPrevious(currentNode.getPoint());
-                    nextNode.setStartCost(currentNode_totalCost);
-                    nextNode.setEndCost(currentNode_totalCost + nextPoint.computeCost(end));
-                    openList.add(nextNode);
+                // Visual aid
+                if (PathingMain.getOccupancy(nextPoint) != PathingMain.GridValues.SEARCHED){
+                    PathingMain.setOccupancy(nextPoint);
                 }
+
+                // Check to see if nextPoint is one step away
+                // from the end and return the path if it is
+                if (withinReach.test(nextPoint, end)) {
+
+                    // Make sure there are no infinite loops in the path
+                    if (detectLoop(currentNode, closedList)) {
+                        System.out.println("Loop!");
+                        return new ArrayList<>();
+                    }
+
+                    // Add the last point to the path
+                    path.add(0, nextPoint);
+
+                    // Load all the nodes in the route into a list
+                    while (currentNode.getPoint() != start) {
+                        path.add(0, currentNode.getPoint());
+                        currentNode = closedList.get(currentNode.getPrevious());
+                    }
+
+                    // Return the path
+                    return path;
+                }
+
+                // Generate a new node from nextPoint
+                nextNode = new Node<>(nextPoint);
+                // g-value = (currentPoint g-value) + (distance between currentPoint and nextPoint)
+                nextNode.setStartCost(currentNode.getStartCost() + currentNode.getPoint().computeCost(nextPoint));
+                // h-value = (distance between nextPoint and the end point)
+                nextNode.setEndCost(nextPoint.computeCost(end));
+
+                // Check if the point has already been traversed with a smaller f-value
+                nodeCheck = openListMap.get(nextPoint);
+
+                // If there is a duplicate, one of the two points will be removed
+                if(nodeCheck != null){
+                    if (nodeCheck.getTotalCost() < nextNode.getTotalCost()){
+                        // Existing node is better, ignore the newer node
+                        continue;
+                    }
+                    // New node is better, remove the old node
+                    openList.remove(nodeCheck);
+                    openListMap.remove(nodeCheck.getPoint());
+                }
+
+                // Check if the node has been explored
+                nodeCheck = closedList.get(nextPoint);
+
+                // If the node is not found in the HashMap, or the found point has a
+                // larger f-value than nextPoint, save the node to be explored later
+                if (nodeCheck == null || nodeCheck.getTotalCost() > nextNode.getTotalCost()) {
+
+                    // If there are no duplicates, add the next point
+                    // to openList and the implied LinkedList of nodes
+                    nextNode.setPrevious(currentNode.getPoint());
+                    openList.add(nextNode);
+                    openListMap.put(nextPoint, nextNode);
+                }
+
             }
 
             // Add the current node to the map of explored nodes
             closedList.put(currentNode.getPoint(), currentNode);
         }
 
+        // If we exited the while loop, that
+        // means there is no path available
         return new ArrayList<>();
+    }
+
+    private boolean detectLoop(Node<Point> node, Map<Point, Node<Point>> map) {
+
+        HashSet<Point> traversedNodes = new HashSet<>();
+
+        while (node != null) {
+
+            if (traversedNodes.contains(node.getPoint()))
+                return true;
+
+            traversedNodes.add(node.getPoint());
+
+            node = map.get(node.getPrevious());
+        }
+
+        return false;
     }
 }

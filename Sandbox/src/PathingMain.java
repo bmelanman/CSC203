@@ -1,3 +1,4 @@
+import org.junit.Test;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -5,6 +6,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class PathingMain extends PApplet {
     private PImage wyvern;
@@ -16,7 +20,14 @@ public class PathingMain extends PApplet {
     private static GridValues[][] grid;
     private static final int ROWS = 15;
     private static final int COLS = 20;
+
     enum GridValues {BACKGROUND, OBSTACLE, GOAL, SEARCHED, DEAD_END}
+
+    PathingStrategy pathingStrategy = new AStarPathingStrategy();
+    private Predicate<Point> canTraverse = (p) -> (withinBounds(p)
+            && getOccupancy(p) != PathingMain.GridValues.OBSTACLE
+            && getOccupancy(p) != PathingMain.GridValues.DEAD_END);
+
     private Point wPos;
     private Point goalPos;
     private boolean foundPath = false;
@@ -28,7 +39,7 @@ public class PathingMain extends PApplet {
     public void setup() {
         path = new LinkedList<>();
         wPos = new Point(1, 1);
-        goalPos = new Point(13, 14);
+        goalPos = new Point(13, 13);
 
         wyvern = loadImage("images/wyvern1.bmp");
         background = loadImage("images/grass.bmp");
@@ -36,12 +47,12 @@ public class PathingMain extends PApplet {
         goal = loadImage("images/water.bmp");
 
         grid = new GridValues[ROWS][COLS];
-        initialize_grid(grid);
+        initialize_grid();
 
         noLoop();
     }
 
-    private void initialize_grid(GridValues[][] grid) {
+    private void initialize_grid() {
         for (GridValues[] gridValues : grid) {
             Arrays.fill(gridValues, GridValues.BACKGROUND);
         }
@@ -101,10 +112,10 @@ public class PathingMain extends PApplet {
         }
     }
 
-    private void draw_visited(){
-        for(int i = 0; i < ROWS; i++){
-            for(int j = 0; j < COLS; j++){
-                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END){
+    private void draw_visited() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END) {
                     fill(0, 128);
                     rect(
                             j * TILE_SIZE + (float) (TILE_SIZE / 4),
@@ -117,10 +128,10 @@ public class PathingMain extends PApplet {
         }
     }
 
-    private void clear_searched(GridValues[][] grid){
-        for(int i = 0; i < ROWS; i++){
-            for(int j = 0; j < COLS; j++){
-                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END){
+    private void clear_searched() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END) {
                     grid[i][j] = GridValues.BACKGROUND;
                 }
             }
@@ -134,12 +145,15 @@ public class PathingMain extends PApplet {
     public void keyPressed() {
         if (key == ' ') {
             path.clear();
-            clear_searched(grid);
-            foundPath = findGoal(wPos, goalPos, grid, path);
+            clear_searched();
+            foundPath = findGoal(wPos, goalPos);
             redraw();
-        }
-        else if (key == 'p'){
+        } else if (key == 'p') {
             draw_visited();
+            redraw();
+        } else if (key == 'c') {
+            path.clear();
+            initialize_grid();
             redraw();
         }
     }
@@ -161,16 +175,9 @@ public class PathingMain extends PApplet {
         return new Point(mouseX / TILE_SIZE, mouseY / TILE_SIZE);
     }
 
-    private boolean findGoal(Point pos, Point goal, GridValues[][] grid, List<Point> path) {
+    private boolean findGoal(Point pos, Point goal) {
 
-        PathingStrategy strategy = new DepthFirstSearch();
-
-        Predicate<Point> canTraverse =
-                (p) -> (withinBounds(p, grid)
-                        && getOccupancy(p) != PathingMain.GridValues.OBSTACLE
-                        && getOccupancy(p) != PathingMain.GridValues.DEAD_END);
-
-        List<Point> aStarPath = strategy.computePath(
+        path = pathingStrategy.computePath(
                 pos,
                 goal,
                 canTraverse,
@@ -178,52 +185,52 @@ public class PathingMain extends PApplet {
                 PathingStrategy.CARDINAL_NEIGHBORS_RDLU
         );
 
-        if (aStarPath.size() == 0) {
+        if (path.isEmpty()) {
             System.out.println("No path found");
             return false;
         }
 
-        path.addAll(aStarPath);
-
         return true;
     }
 
-    private static boolean withinBounds(Point p, GridValues[][] grid) {
+    private static boolean withinBounds(Point p) {
         return p.y >= 0 && p.y < grid.length && p.x >= 0 && p.x < grid[0].length;
     }
 
-    public static void setOccupancy(Point p, GridValues value) {
-        grid[p.y][p.x] = value;
+    static void setOccupancy(Point p) {
+        grid[p.y][p.x] = GridValues.SEARCHED;
     }
 
-    public static GridValues getOccupancy(Point p){
+    static GridValues getOccupancy(Point p) {
         return grid[p.y][p.x];
     }
 
+    @Test
+    public void test1() {
+
+        boolean[][] pathCheck = new boolean[COLS][ROWS];
+
+       path = pathingStrategy.computePath(
+                        new Point(0, 0),
+                        new Point(0, 2),
+                        canTraverse,
+                        Point::neighbors,
+                        PathingStrategy.CARDINAL_NEIGHBORS_RDLU
+                );
+
+       boolean[][] gridArr = checkPath(path);
+
+        assertArrayEquals(pathCheck, gridArr);
+    }
+
+    public boolean[][] checkPath(List<Point> path) {
+        boolean[][] gridArr = new boolean[COLS][ROWS];
+
+        for (Point point : path) {
+            gridArr[point.y][point.x] = true;
+        }
+
+        return gridArr;
+    }
+
 }
-
-    /*
-    private static final Function<Point, Stream<Point>> DIAGONAL_NEIGHBORS =
-            point ->
-                    Stream.<Point>builder()
-                            .add(new Point(point.x - 1, point.y - 1))
-                            .add(new Point(point.x + 1, point.y + 1))
-                            .add(new Point(point.x - 1, point.y + 1))
-                            .add(new Point(point.x + 1, point.y - 1))
-                            .build();
-
-
-    private static final Function<Point, Stream<Point>> DIAGONAL_CARDINAL_NEIGHBORS =
-            point ->
-                    Stream.<Point>builder()
-                            .add(new Point(point.x - 1, point.y - 1))
-                            .add(new Point(point.x + 1, point.y + 1))
-                            .add(new Point(point.x - 1, point.y + 1))
-                            .add(new Point(point.x + 1, point.y - 1))
-                            .add(new Point(point.x, point.y - 1))
-                            .add(new Point(point.x, point.y + 1))
-                            .add(new Point(point.x - 1, point.y))
-                            .add(new Point(point.x + 1, point.y))
-                            .build();
-}
-*/

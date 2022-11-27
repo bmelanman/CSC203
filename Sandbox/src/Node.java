@@ -1,24 +1,49 @@
+import java.util.Objects;
+
 class Node<Point> implements Comparable<Node<Point>> {
     private final Point point;
     private Point previous;
-    private int startCost;
-    private int endCost;
+    private int startCost;  // G Value
+    private int endCost;    // H Value
+    private int totalCost;
 
-    Node(Point point) {
-        this(point, (int) Double.POSITIVE_INFINITY);
-        this.startCost = (int) Double.POSITIVE_INFINITY;
+    public Node(Point point, Point previous, int startCost, int endCost) {
+        this.point = point;
+        this.previous = previous;
+        this.startCost = startCost;
+        this.endCost = endCost;
+        this.totalCost = startCost + endCost;
     }
 
-    Node(Point point, int endCost) {
-        this.point = point;
-        this.previous = null;
-        this.startCost = 0;
-        this.endCost = endCost;
+    public Node(Point point) {
+        this(point, null, 0, 0);
     }
 
     @Override
-    public int compareTo(Node o) {
-        return Double.compare(endCost, o.endCost);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return point.equals(((Node<?>) o).point);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(point, previous, startCost, endCost, totalCost);
+    }
+
+    @Override
+    public int compareTo(Node n) {
+        return Double.compare(totalCost, n.totalCost);
+    }
+
+    @Override
+    public String toString() {
+        return (
+                this.point.toString() + " "
+                        + this.startCost + " "
+                        + this.endCost + " "
+                        + this.totalCost
+        );
     }
 
     public Point getPoint() {
@@ -39,9 +64,15 @@ class Node<Point> implements Comparable<Node<Point>> {
 
     public void setStartCost(int startCost) {
         this.startCost = startCost;
+        this.totalCost = startCost + endCost;
     }
 
     public void setEndCost(int endCost) {
         this.endCost = endCost;
+        this.totalCost = startCost + endCost;
+    }
+
+    public int getTotalCost() {
+        return this.totalCost;
     }
 }

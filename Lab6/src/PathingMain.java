@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PathingMain extends PApplet {
     private List<PImage> images;
@@ -20,24 +17,21 @@ public class PathingMain extends PApplet {
     private List<Point> path;
     private static final int TILE_SIZE = 32;
     private static final int ANIMATION_TIME = 100;
-    private GridValues[][] grid;
     private static final int ROWS = 15;
     private static final int COLS = 20;
-
-    public enum GridValues {BACKGROUND, OBSTACLE, GOAL, SEARCHED, DEAD_END}
-
     private Point wPos;
     private static Point goalPos;
     private boolean drawPath = false;
+    public static GridValues[][] grid;
+    private final PathingStrategy strategy = new DFSPathingStrategy();
+    private final Predicate<Point> canTraverse = p -> (
+            withinBounds(p)
+                    && !p.equals(wPos)
+                    && getOccupancy(p) != PathingMain.GridValues.OBSTACLE
+                    && getOccupancy(p) != PathingMain.GridValues.DEAD_END
+    );
 
-    Function<Point, Stream<Point>> CARDINAL_NEIGHBORS =
-            point ->
-                    Stream.<Point>builder()
-                            .add(new Point(point.x + 1, point.y))
-                            .add(new Point(point.x, point.y + 1))
-                            .add(new Point(point.x - 1, point.y))
-                            .add(new Point(point.x, point.y - 1))
-                            .build();
+    enum GridValues {BACKGROUND, OBSTACLE, GOAL, SEARCHED, DEAD_END}
 
     public void settings() {
         size(640, 480);
@@ -58,14 +52,14 @@ public class PathingMain extends PApplet {
         goal = loadImage("images/water.bmp");
 
         grid = new GridValues[ROWS][COLS];
-        initialize_grid(grid);
+        initialize_grid();
 
         current_image = 0;
         next_time = System.currentTimeMillis() + ANIMATION_TIME;
     }
 
     /* set up a 2D grid to represent the world */
-    private static void initialize_grid(GridValues[][] grid) {
+    private void initialize_grid() {
         for (GridValues[] gridValues : grid) {
             Arrays.fill(gridValues, GridValues.BACKGROUND);
         }
@@ -83,7 +77,7 @@ public class PathingMain extends PApplet {
             grid[11][col] = GridValues.OBSTACLE;
         }
 
-        grid[goalPos.y][goalPos.x] = GridValues.GOAL;
+        grid[goalPos.y()][goalPos.x()] = GridValues.GOAL;
     }
 
     private void next_image() {
@@ -102,7 +96,7 @@ public class PathingMain extends PApplet {
         draw_grid();
         draw_path();
 
-        image(images.get(current_image), wPos.x * TILE_SIZE, wPos.y * TILE_SIZE);
+        image(images.get(current_image), wPos.x() * TILE_SIZE, wPos.y() * TILE_SIZE);
     }
 
     private void draw_grid() {
@@ -118,8 +112,8 @@ public class PathingMain extends PApplet {
             for (Point p : path) {
                 fill(128, 0, 0);
                 rect(
-                        (p.x * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
-                        (p.y * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
+                        (p.x() * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
+                        (p.y() * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
                         (float) (TILE_SIZE / 4),
                         (float) (TILE_SIZE / 4)
                 );
@@ -144,14 +138,24 @@ public class PathingMain extends PApplet {
         }
     }
 
+    private void clear_searched() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (grid[i][j] == GridValues.SEARCHED || grid[i][j] == GridValues.DEAD_END) {
+                    grid[i][j] = GridValues.BACKGROUND;
+                }
+            }
+        }
+    }
+
     public void mousePressed() {
         Point pressed = mouseToPoint();
         List<GridValues> spaces = List.of(new GridValues[]{GridValues.BACKGROUND, GridValues.SEARCHED, GridValues.DEAD_END});
 
-        if (grid[pressed.y][pressed.x] == GridValues.OBSTACLE)
-            grid[pressed.y][pressed.x] = GridValues.BACKGROUND;
-        else if (spaces.contains(grid[pressed.y][pressed.x])) {
-            grid[pressed.y][pressed.x] = GridValues.OBSTACLE;
+        if (grid[pressed.y()][pressed.x()] == GridValues.OBSTACLE)
+            grid[pressed.y()][pressed.x()] = GridValues.BACKGROUND;
+        else if (spaces.contains(grid[pressed.y()][pressed.x()])) {
+            grid[pressed.y()][pressed.x()] = GridValues.OBSTACLE;
         }
 
         redraw();
@@ -167,93 +171,38 @@ public class PathingMain extends PApplet {
 
     public void keyPressed() {
         if (key == ' ') {
-            //clear out prior path and re-initialize grid
+            //clear out prior path and remove old search flags
             path.clear();
-            initialize_grid(grid);
+            clear_searched();
 
-            depthFirstSearch(wPos, goalPos);
+            // Run pathing algorithm
+            path = strategy.computePath(
+                    wPos, goalPos,
+                    canTraverse,
+                    Point::neighbors,
+                    PathingStrategy.CARDINAL_NEIGHBORS_RDLU
+            );
 
         } else if (key == 'p') {
             drawPath ^= true;
 
         } else if (key == 'c') {
             path.clear();
-            initialize_grid(grid);
+            initialize_grid();
 
         }
     }
 
-    private void depthFirstSearch(Point start, Point end) {
-
-        Predicate<Point> canTraverse =
-                (p) -> (withinBounds(p)
-                        && getOccupancy(p) != GridValues.OBSTACLE
-                        && getOccupancy(p) != GridValues.DEAD_END);
-
-        Predicate<Point> checkSearched =
-                (p) -> (getOccupancy(p) != GridValues.SEARCHED);
-
-        List<Point> successors;
-        List<Point> nextPoints;
-        Point currentPoint = start;
-
-        while (!currentPoint.neighbors(end)) {
-
-            fill(128, 0, 0);
-            rect(
-                    (currentPoint.x * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
-                    (currentPoint.y * TILE_SIZE) + (float) ((TILE_SIZE * 3) / 8),
-                    (float) (TILE_SIZE / 4),
-                    (float) (TILE_SIZE / 4)
-            );
-            // Set the current point as searched
-            setOccupancy(currentPoint, GridValues.SEARCHED);
-
-            // Generate a set of valid next points
-            successors = CARDINAL_NEIGHBORS.apply(currentPoint)
-                    .filter(canTraverse)
-                    .collect(Collectors.toList());
-
-            // If there are no traversable points, return an empty list (isn't that clever?)
-            if (successors.isEmpty()) {
-                System.out.println("No path!");
-                path.clear();
-                return;
-            }
-
-            // Filter out points that have been traversed
-            nextPoints = successors.stream().filter(checkSearched).collect(Collectors.toList());
-
-            // If there are no valid and untraveled points, we'll use
-            // a traversed point and remove the current point mark it
-            // as a dead end which will never be visited again
-            if (nextPoints.isEmpty()) {
-                setOccupancy(currentPoint, GridValues.DEAD_END);
-                path.remove(path.size() - 1);
-                nextPoints = successors;
-            }
-
-            // Grab what ever point is first in line
-            currentPoint = nextPoints.get(0);
-
-            // Add it to the path and hope for the best
-            path.add(currentPoint);
-        }
-
-        // Make sure we mark the last point as visited
-        setOccupancy(currentPoint, GridValues.SEARCHED);
+    boolean withinBounds(Point p) {
+        return p.y() >= 0 && p.y() < grid.length &&
+                p.x() >= 0 && p.x() < grid[0].length;
     }
 
-    private PathingMain.GridValues getOccupancy(Point p) {
-        return grid[p.y][p.x];
+    static void setOccupancy(Point p) {
+        grid[p.y()][p.x()] = GridValues.SEARCHED;
     }
 
-    private void setOccupancy(Point p, PathingMain.GridValues value) {
-        grid[p.y][p.x] = value;
-    }
-
-    private boolean withinBounds(Point p) {
-        return p.y >= 0 && p.y < grid.length &&
-                p.x >= 0 && p.x < grid[0].length;
+    static GridValues getOccupancy(Point p){
+        return grid[p.y()][p.x()];
     }
 }
