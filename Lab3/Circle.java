@@ -1,5 +1,4 @@
-import java.awt.Color;
-import java.awt.Point;
+import java.awt.*;
 
 public class Circle implements Shape {
     private double radius;
@@ -28,7 +27,7 @@ public class Circle implements Shape {
 
     public boolean equals(Object o) {
 
-        if (!(o instanceof Circle) || (o == null)){
+        if (!(o instanceof Circle) || (o == null)) {
             return false;
         }
 
